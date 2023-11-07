@@ -1,118 +1,77 @@
-const fs = require("fs");
+import fs from 'fs/promises';
 
 class ProductManager {
-  constructor(path) {
-    this.path = path;
-    this.loadProducts();
+  constructor(filePath) {
+    this.path = filePath;
   }
 
-  loadProducts() {
+  async addProduct(productData) {
+    const products = await this.readProductsFile();
+
+    // Asignar un ID autoincrementable
+    const lastProduct = products[products.length - 1];
+    const newId = lastProduct ? lastProduct.id + 1 : 1;
+
+    // Agregar el nuevo producto al arreglo
+    const newProduct = { id: newId, ...productData };
+    products.push(newProduct);
+
+    // Guardar el arreglo actualizado en el archivo
+    await this.saveProductsFile(products);
+
+    return newProduct;
+  }
+
+  async getProducts() {
+    const products = await this.readProductsFile();
+    return products;
+  }
+
+  async getProductById(productId) {
+    const products = await this.readProductsFile();
+    return products.find(product => product.id === productId);
+  }
+
+  async updateProduct(productId, updatedData) {
+    const products = await this.readProductsFile();
+
+    const index = products.findIndex(product => product.id === productId);
+    if (index !== -1) {
+      // Mantener el ID original
+      updatedData.id = productId;
+      products[index] = updatedData;
+      await this.saveProductsFile(products);
+      return updatedData;
+    }
+
+    return null; // Producto no encontrado
+  }
+
+  async deleteProduct(productId) {
+    const products = await this.readProductsFile();
+
+    const index = products.findIndex(product => product.id === productId);
+    if (index !== -1) {
+      products.splice(index, 1);
+      await this.saveProductsFile(products);
+      return true; // Producto eliminado
+    }
+
+    return false; // Producto no encontrado
+  }
+
+  async readProductsFile() {
     try {
-      const data = fs.readFileSync(this.path, "utf-8");
-      this.products = JSON.parse(data);
-      this.nextId = this.calculateNextId();
+      const data = await fs.readFile(this.path, 'utf-8');
+      return JSON.parse(data);
     } catch (error) {
-      this.products = [];
-      this.nextId = 1;
+      return [];
     }
   }
 
-  addProduct(product) {
-    if (product.title && product.description && product.price && product.thumbnail && product.code && product.stock) {
-      const newProduct = {
-        id: this.nextId,
-        title: product.title,
-        description: product.description,
-        price: product.price,
-        thumbnail: product.thumbnail,
-        code: product.code,
-        stock: product.stock,
-      };
-      this.products.push(newProduct);
-      this.saveProducts();
-      this.nextId++;
-      return newProduct;
-    } else {
-      console.log("Todos los campos son obligatorios");
-    }
-  }
-
-  updateProduct(id, updatedProduct) {
-    const index = this.products.findIndex((product) => product.id === id);
-    if (index !== -1) {
-      this.products[index] = { id, ...updatedProduct };
-      this.saveProducts();
-      return this.products[index];
-    } else {
-      console.log("Producto no encontrado");
-    }
-  }
-
-  deleteProduct(id) {
-    const index = this.products.findIndex((product) => product.id === id);
-    if (index !== -1) {
-      this.products.splice(index, 1);
-      this.saveProducts();
-      console.log("Producto eliminado");
-    } else {
-      console.log("Producto no encontrado");
-    }
-  }
-
-  saveProducts() {
-    fs.writeFileSync(this.path, JSON.stringify(this.products, null, 2), "utf-8");
-  }
-
-  getProducts() {
-    return this.products;
-  }
-
-  getProductById(id) {
-    const product = this.products.find((product) => product.id === id);
-    return product;
-  }
-
-  calculateNextId() {
-    if (this.products.length === 0) {
-      return 1;
-    }
-    const maxId = Math.max(...this.products.map((product) => product.id));
-    return maxId + 1;
+  async saveProductsFile(products) {
+    await fs.writeFile(this.path, JSON.stringify(products, null, 2));
   }
 }
 
-const manager = new ProductManager('D:\\Luis\\Documents\\GitHub\\BACKEND_CODER\\Registrador\\productos.json');
-
-manager.addProduct({
-  title: "producto1",
-  description: "Fideos semolados",
-  price: 5.3,
-  thumbnail: "imagen1.jpg",
-  code: 569856,
-  stock: 10
-});
-
-manager.addProduct({
-  title: "producto2",
-  description: "Arroz integral",
-  price: 3.99,
-  thumbnail: "imagen2.jpg",
-  code: 123456,
-  stock: 15
-});
-
-const productsList = manager.getProducts();
-console.log(productsList);
-
-const updatedProduct = manager.updateProduct(1, {
-  title: "producto1 actualizado",
-  description: "Nueva descripción",
-  price: 6.0,
-  thumbnail: "imagen1_actualizada.jpg",
-  code: 569856,
-  stock: 20
-});
-console.log("Producto actualizado:", updatedProduct);
-
-manager.deleteProduct(2);
-console.log("Productos después de eliminar el producto con ID 2:", manager.getProducts());
+export default ProductManager ;
