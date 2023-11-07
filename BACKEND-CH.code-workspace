@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"name": "BACKEND-CH",
+			"path": "."
+		},
+		{
+			"name": "Registrador",
+			"path": "../BACKEND_CODER/Registrador"
+		}
+	],
+	"settings": {}
+}
