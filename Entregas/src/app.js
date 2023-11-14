@@ -1,24 +1,26 @@
-import express from "express";
-import viewsRouter from "./routes/views.routes.js";
-import productsRouter from "./routes/products.routes.js";
-import productsRouter from "./routes/carts.routes.js";
+import express from 'express';
+import productsRouter from './routes/products.routes.js';
+import cartsRouter from './routes/cart.routes.js';
 
-const PORT = 8080;
+// server
 const app = express();
+const PORT = 8080;
+
+// Middleware para parsear el cuerpo de las peticiones como JSON
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
-//Endpoints
+// Ruta raíz
+app.get('/', (req, res) => {
+  res.send('¡Bienvenido!!');
+});
 
-//Views endpoint
-app.use("/", viewsRouter);
+// Rutas para productos
+app.use('/api/products', productsRouter);
 
-//Products endpoint
-app.use("/api/products", productsRouter);
+// Rutas para carritos
+app.use('/api/carts', cartsRouter);
 
-//Cards endpoint
-app.use("/api/carts", cartsRouter);
-
+// Inicia el servidor
 app.listen(PORT, () => {
-  console.log(`Service enable on port ${PORT}`);
+  console.log(`Servidor escuchando en el puerto ${PORT}`);
 });
