@@ -2,12 +2,14 @@ import express from "express";
 import handlebars from "express-handlebars";
 import { Server } from "socket.io";
 import viewsRouter from "./routes/views.routes.js";
-
+import mongoose from "mongoose";
+import usersRoutes from './routes/users.routes.js'
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const PORT = 5000;
+const MONGOOSE_URL = 'mongodb://127.0.0.1:27017/ecommerce'
 
 const app = express();
 
@@ -51,3 +53,13 @@ app.set("view engine", "handlebars");
 app.set("io", io);
 app.use("/", viewsRouter);
 app.use("/static", express.static(`${__dirname}/public`));
+app.use("/users", usersRoutes);
+
+try {
+  await mongoose.connect(MONGOOSE_URL)
+  app.listen(PORT, () => {
+    console.log(`Servicio activo en puerto ${PORT}`)
+  })
+} catch (error) {
+  console.log(`Error al inicialiar servidor (${error.message})`)
+}
