@@ -40,7 +40,6 @@ app.set("views", __dirname + "/views");
       });
 
       socket.on("message", (data) => {
-        // Consider storing a limited history of messages instead of pushing all messages
         chat_messages.push(data);
         io.emit("messageLogs", chat_messages);
       });
