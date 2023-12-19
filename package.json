@@ -16,6 +16,5 @@
     "mongoose": "^8.0.3",
     "socket.io": "^4.7.2"
   },
-  "devDependencies": {},
   "description": ""
 }
