@@ -1,17 +1,49 @@
-import mongoose from "mongoose";
+import { Router } from "express";
+import userModel from "../models/users.model.js";
 
-mongoose.pluralize(null)
+const router = Router();
 
-const collection = 'users'
+router.get("/", async (req, res) => {
+  const users = await userModel.find();
+  res.status(200).send({ status: "Todo Ok", data: users });
+});
 
-const shema = new mongoose.Schema({
-    firstName: {type: String, required: true},
-    lastName: {type: String, required: true},
-    userName: {type: String, required: true},
-    age: { type: Number, required: true},
-    active: {type: Boolean, required: true},
-})
+router.post("/", async (req, res) => {
+  try {
+    const userData = req.body;
 
-const model = mongoose.model(collection, shema)
+    if (!userData.firstName || !userData.lastName || !userData.userName) {
+      res.status(400).json({ error: "Debe completar todos los campos" });
+      return;
+    }
 
-export default model
+    // Create a new user with data from req.body
+    const newUser = {
+      firstName: userData.firstName,
+      lastName: userData.lastName,
+      userName: userData.userName,
+      age: userData.age || null,
+      active: userData.active || true,
+    };
+
+    // Insert the new user into the database
+    const result = await userModel.insertOne(newUser);
+
+    res.json({ message: "Usuario creado con éxito" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error creando usuario" });
+  }
+});
+
+router.put("/:uid", async (req, res) => {
+  const result = await userModel.updateOne({ _id: uid }, req.body);
+  res.status(200).send({ status: "Todo Ok", data: users });
+});
+
+router.delete("/:uid", async (req, res) => {
+  const deleteUser = await userModel.deleteOne({ _id: uid });
+  res.status(200).send({ status: "Todo Ok", data: users });
+});
+
+export default router;
