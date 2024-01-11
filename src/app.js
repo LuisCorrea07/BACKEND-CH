@@ -3,9 +3,10 @@ import handlebars from "express-handlebars";
 import { Server } from "socket.io";
 import viewsRouter from "./routes/views.routes.js";
 import mongoose from "mongoose";
-import usersRoutes from "./routes/users.routes.js";
 import productsRouter from "./routes/products.routes.js";
-import usersRouter from "./routes/users.routes.js"
+import usersRouter from "./routes/users.routes.js";
+import cartsRouter from "./routes/carts.routes.js";
+
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 
@@ -13,19 +14,24 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const PORT = 3000;
 //const MONGOOSE_URL = 'mongodb://127.0.0.1:27017/ecommerce' --> LOCALHOST
-const MONGOOSE_URL = "mongodb+srv://administrador:Admin1234@cluster0.wttbr2c.mongodb.net/ecommerce"; //Mongo Atlas en la nube
+const MONGOOSE_URL =
+  "mongodb+srv://administrador:Admin1234@cluster0.wttbr2c.mongodb.net/ecommerce"; //Mongo Atlas en la nube
 
 const app = express();
 
-app.set("view engine", "handlebars");
+app.engine("handlebars", handlebars.engine());
 app.set("views", __dirname + "/views");
+app.set("view engine", "handlebars");
+//app.set("socketServer", socketServer);
 
 // Middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/", viewsRouter);
 app.use("/api/products", productsRouter);
-app.use("/api/users", usersRoutes);
+app.use("/api/users", usersRouter);
+app.use("/api/carts", cartsRouter);
+
 app.use("/static", express.static(`${__dirname}/public`));
 
 const startServer = async () => {
