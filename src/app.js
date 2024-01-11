@@ -5,13 +5,15 @@ import viewsRouter from "./routes/views.routes.js";
 import mongoose from "mongoose";
 import usersRoutes from "./routes/users.routes.js";
 import productsRouter from "./routes/products.routes.js";
+import usersRouter from "./routes/users.routes.js"
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const PORT = 3000;
-const MONGOOSE_URL = "mongodb://127.0.0.1:27017/ecommerce";
+//const MONGOOSE_URL = 'mongodb://127.0.0.1:27017/ecommerce' --> LOCALHOST
+const MONGOOSE_URL = "mongodb+srv://administrador:Admin1234@cluster0.wttbr2c.mongodb.net/ecommerce"; //Mongo Atlas en la nube
 
 const app = express();
 
@@ -23,14 +25,14 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/", viewsRouter);
 app.use("/api/products", productsRouter);
-app.use("/users", usersRoutes);
+app.use("/api/users", usersRoutes);
 app.use("/static", express.static(`${__dirname}/public`));
 
 const startServer = async () => {
   try {
     await mongoose.connect(MONGOOSE_URL);
     const httpServer = app.listen(PORT, () => {
-      console.log(`Servicio activo en puerto ${PORT} conectado a BBDD`);
+      console.log(`Backend activo en puerto ${PORT} conectado a BBDD`);
     });
 
     // Crear el servidor de Socket.IO después de iniciar el servidor Express
