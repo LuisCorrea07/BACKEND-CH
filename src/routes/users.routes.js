@@ -13,4 +13,17 @@ router.get("/", async (req, res) => {
   }
 });
 
+router.get('/paginated', async (req, res)=>{
+  try {
+    const users = await controller.getUsersPaginated()
+  } catch (error) {
+    
+  }
+})
+
+
+
+
+
+
 export default router;

@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+//import mongoosePaginate from "mongoose-paginate-v2";
 
 mongoose.pluralize(null);
 
@@ -11,6 +12,8 @@ const schema = new mongoose.Schema({
   email: { type: String, required: true },
   gender: { type: String, required: true },
 });
+
+//schema.plugin(mongoosePaginate)
 
 const model = mongoose.model(collection, schema);
 

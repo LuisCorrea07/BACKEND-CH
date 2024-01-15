@@ -1,12 +1,16 @@
-import mongoose from 'mongoose'
+import mongoose from "mongoose";
 
-mongoose.pluralize(null)
+mongoose.pluralize(null);
 
-const collection = 'carts'
+const collection = "carts";
 
 const schema = new mongoose.Schema({
-    products: {type: [ mongoose.Schema.Types.ObjectId ], ref: 'products'},
-    total: { type: Number, required: true}
-})
+  products: { type: [mongoose.Schema.Types.ObjectId], ref: "products" },
+  total: { type: Number, required: true },
+});
 
-export default mongoose.model(collection, schema)
+/* schema.pre("find", function () {
+  this.populate({ path: "products", model: productsModel });
+}); */
+
+export default mongoose.model(collection, schema);

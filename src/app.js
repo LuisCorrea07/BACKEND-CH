@@ -6,6 +6,7 @@ import mongoose from "mongoose";
 import productsRouter from "./routes/products.routes.js";
 import usersRouter from "./routes/users.routes.js";
 import cartsRouter from "./routes/carts.routes.js";
+import ordersRouter from "./routes/orders.routes.js"
 
 import { dirname } from "path";
 import { fileURLToPath } from "url";
@@ -31,6 +32,7 @@ app.use("/", viewsRouter);
 app.use("/api/products", productsRouter);
 app.use("/api/users", usersRouter);
 app.use("/api/carts", cartsRouter);
+app.use("/api/orders", ordersRouter);
 
 app.use("/static", express.static(`${__dirname}/public`));
 

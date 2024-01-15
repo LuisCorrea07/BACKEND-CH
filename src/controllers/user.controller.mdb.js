@@ -12,4 +12,18 @@ export class UserController {
       return err.message;
     }
   }
+
+  async getUsersPaginated(){
+    
+  }
+
+
+
+
+
+
+
+
+
+
 }

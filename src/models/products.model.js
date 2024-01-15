@@ -15,4 +15,3 @@ const schema = new mongoose.Schema({
 });
 
 export default mongoose.model(colletion, schema);
-
