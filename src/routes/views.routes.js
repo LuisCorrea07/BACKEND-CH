@@ -41,4 +41,25 @@ router.get("/products", (req, res) => {
   res.render("products", {});
 });
 
+router.get("/users", async (req, res) => {
+  const data = await userController.getUsersPaginated()
+  data.pages = []
+  for (let i = 1; i <= data.totalPages; i++) data.pages.push(i);  
+  
+  res.render("users", {
+    title: "Listado de Usuarios",
+    data: data,
+  });
+});
+
+router.get("/userspaginated", async (req, res) => {
+  const data = await userController.getUsersPaginated();
+  data.pages = [];
+  for (let i = 1; i <= data.totalPages; i++) data.pages.push(i);
+  res.render("users", {
+    title: "Listado de Usuarios",
+    data: data,
+  });
+});
+
 export default router;
