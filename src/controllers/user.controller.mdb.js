@@ -1,4 +1,4 @@
-import userModel from '../models/users.model.js';
+import userModel from "../models/users.model.js";
 
 export class UserController {
   constructor() {}
@@ -13,17 +13,14 @@ export class UserController {
     }
   }
 
-  async getUsersPaginated(){
-    
+  async getUsersPaginated() {
+    try {
+      return await userModel.paginate(
+        { gender: "female" },
+        { offset: 0, limit: 100, lean: true }
+      );
+    } catch (err) {
+      return err.message;
+    }
   }
-
-
-
-
-
-
-
-
-
-
 }

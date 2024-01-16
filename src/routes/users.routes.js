@@ -13,17 +13,13 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get('/paginated', async (req, res)=>{
+router.get("/paginated", async (req, res) => {
   try {
-    const users = await controller.getUsersPaginated()
+    const users = await controller.getUsersPaginated();
+    res.status(200).send({ status: "OK", data: users });
   } catch (error) {
-    
+    res.status(500).send({ status: "ERR", data: error.message });
   }
-})
-
-
-
-
-
+});
 
 export default router;
