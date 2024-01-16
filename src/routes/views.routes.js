@@ -52,6 +52,19 @@ router.get("/users", async (req, res) => {
   });
 });
 
+router.get("/users/:page", async (req, res) => {
+  const data = await userController.getUsersPaginated(0)
+  data.pages = []
+  for (let i = 1; i <= data.totalPages; i++) data.pages.push(i);  
+  
+  res.render("users", {
+    title: "Listado de Usuarios",
+    data: data,
+  });
+});
+
+
+
 router.get("/userspaginated", async (req, res) => {
   const data = await userController.getUsersPaginated();
   data.pages = [];

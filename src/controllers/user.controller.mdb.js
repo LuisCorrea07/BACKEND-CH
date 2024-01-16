@@ -13,11 +13,11 @@ export class UserController {
     }
   }
 
-  async getUsersPaginated() {
+  async getUsersPaginated(offset) {
     try {
       return await userModel.paginate(
         { gender: "female" },
-        { offset: 0, limit: 100, lean: true }
+        { offset: offset, limit: 100, lean: true }
       );
     } catch (err) {
       return err.message;
