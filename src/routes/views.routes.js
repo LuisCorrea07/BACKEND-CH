@@ -42,10 +42,10 @@ router.get("/products", (req, res) => {
 });
 
 router.get("/users", async (req, res) => {
-  const data = await userController.getUsersPaginated()
-  data.pages = []
-  for (let i = 1; i <= data.totalPages; i++) data.pages.push(i);  
-  
+  const data = await userController.getUsersPaginated();
+  data.pages = [];
+  for (let i = 1; i <= data.totalPages; i++) data.pages.push(i);
+
   res.render("users", {
     title: "Listado de Usuarios",
     data: data,
@@ -53,17 +53,19 @@ router.get("/users", async (req, res) => {
 });
 
 router.get("/users/:page", async (req, res) => {
-  const data = await userController.getUsersPaginated(0)
-  data.pages = []
-  for (let i = 1; i <= data.totalPages; i++) data.pages.push(i);  
-  
+  const data = await userController.getUsersPaginated(0);
+  data.pages = [];
+  for (let i = 1; i <= data.totalPages; i++) data.pages.push(i);
+
   res.render("users", {
     title: "Listado de Usuarios",
     data: data,
   });
 });
 
-
+router.get("/cookies", async (req, res)=>{
+  res.render("cookies", {})
+})
 
 router.get("/userspaginated", async (req, res) => {
   const data = await userController.getUsersPaginated();
@@ -74,5 +76,9 @@ router.get("/userspaginated", async (req, res) => {
     data: data,
   });
 });
+
+router.get("/login", async (req, res) => {
+  res.render("login", {})
+})
 
 export default router;

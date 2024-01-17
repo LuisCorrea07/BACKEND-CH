@@ -4,11 +4,14 @@ import { Server } from "socket.io";
 import cookieParser from "cookie-parser";
 import viewsRouter from "./routes/views.routes.js";
 import mongoose from "mongoose";
+import session from "express-session";
+//rutas propias
 import productsRouter from "./routes/products.routes.js";
 import usersRouter from "./routes/users.routes.js";
 import cartsRouter from "./routes/carts.routes.js";
 import ordersRouter from "./routes/orders.routes.js";
 import cookiesRouter from "./routes/cookies.routes.js";
+import sessionRouter from "./routes/sessions.routes.js";
 
 import { dirname } from "path";
 import { fileURLToPath } from "url";
@@ -30,13 +33,17 @@ app.set("view engine", "handlebars");
 // Middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
+app.use(cookieParser("CoderS3cr3t0")); //firmar una cookie agregando algo al cookie parser
+app.use(
+  session({ secret: "CoderS3cr3t0", resave: true, saveUninitialized: true })
+);
 app.use("/", viewsRouter);
 app.use("/api/products", productsRouter);
 app.use("/api/users", usersRouter);
 app.use("/api/carts", cartsRouter);
 app.use("/api/orders", ordersRouter);
 app.use("/api/cookies", cookiesRouter);
+app.use("/api/sessions", sessionRouter);
 
 app.use("/static", express.static(`${__dirname}/public`));
 
