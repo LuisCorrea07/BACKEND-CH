@@ -5,6 +5,9 @@ import cookieParser from "cookie-parser";
 import viewsRouter from "./routes/views.routes.js";
 import mongoose from "mongoose";
 import session from "express-session";
+import FileStore from "session-file-store";
+import MongoStore from "connect-mongo";
+
 //rutas propias
 import productsRouter from "./routes/products.routes.js";
 import usersRouter from "./routes/users.routes.js";
@@ -34,8 +37,16 @@ app.set("view engine", "handlebars");
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser("CoderS3cr3t0")); //firmar una cookie agregando algo al cookie parser
+
+const fileStorage = FileStore(session) //almacenamiento en archivo
 app.use(
-  session({ secret: "CoderS3cr3t0", resave: true, saveUninitialized: true })
+  session({
+    //store: new fileStorage({ path: "./src/sessions", ttl: 60, retries: 0 }), //esta instancia guarda en disco
+    store: MongoStore.create({ mongoUrl: MONGOOSE_URL, mongoOptions: {}, ttl: 60 }), //esta instancia guarda en mongoDB
+    secret: "CoderS3cr3t0",
+    resave: false,
+    saveUninitialized: false,
+  })
 );
 app.use("/", viewsRouter);
 app.use("/api/products", productsRouter);

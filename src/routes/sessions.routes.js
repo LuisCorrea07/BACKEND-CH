@@ -33,16 +33,41 @@ router.get("/logout", async (req, res) => {
 
 router.get("/status", async (req, res) => {
   try {
-    if(req.session.user){
-      res.status(200).send({status: "Ok", data: req.session.user})
-    }else{
-      res.status(200).send({status: "Ok", data: "No hay datos de usuario"})
+    if (req.session.user) {
+      res.status(200).send({ status: "Ok", data: req.session.user });
+    } else {
+      res.status(200).send({ status: "Ok", data: "No hay datos de usuario" });
     }
   } catch (error) {
-    res.status(500).send({status: "ERR", data: error.message})
+    res.status(500).send({ status: "ERR", data: error.message });
   }
-})
+});
 
+const auth = (req, res, next) => {
+  try {
+    if (req.session.user) {
+      if (req.session.user.admin === true) {
+        next();
+      } else {
+        res
+          .status(403)
+          .send({ status: "ERR", data: "El usuario no es un ADMIN" });
+      }
+    } else {
+      res.status(401).send({ status: "ERR", data: "Usuario no autorizado" });
+    }
+  } catch (error) {
+    res.status(500).send({ status: "ERR", data: error.message });
+  }
+};
+
+router.get("/admin", auth, async (req, res) => {
+  try {
+    res.status(200).send({ status: "OK", data: "Estos datos son privados" });
+  } catch (error) {
+    res.status(500).send({ status: "ERR", data: error.message });
+  }
+});
 
 router.post("/login", async (req, res) => {
   try {
