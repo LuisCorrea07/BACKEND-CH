@@ -42,7 +42,7 @@ const fileStorage = FileStore(session) //almacenamiento en archivo
 app.use(
   session({
     //store: new fileStorage({ path: "./src/sessions", ttl: 60, retries: 0 }), //esta instancia guarda en disco
-    store: MongoStore.create({ mongoUrl: MONGOOSE_URL, mongoOptions: {}, ttl: 60 }), //esta instancia guarda en mongoDB
+    store: MongoStore.create({ mongoUrl: MONGOOSE_URL, mongoOptions: {}, ttl: 60, clearInterval: 30000 }), //esta instancia guarda en mongoDB
     secret: "CoderS3cr3t0",
     resave: false,
     saveUninitialized: false,

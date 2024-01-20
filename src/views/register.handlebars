@@ -1,0 +1,32 @@
+<style>
+  .login-container { max-width: 360px; margin: auto; margin-top: 64px; }
+</style>
+
+<div class="login-container">
+  <h1><b>CODERStore</b></h1>
+  <h2>Registro de usuario</h2>
+
+  <form action="/api/sessions/register" method="post" style="margin-top: 32px;">
+    <div class="input-group" style="width: 300px; margin-bottom: 32px;">
+      <span class="input-group-text" id="group1"><i class="fa-solid fa-user"></i></span>
+      <input type="text" name="username" class="form-control" placeholder="Nombre de usuario" required="required">
+    </div>
+
+    <div class="input-group" style="width: 300px; margin-bottom: 32px;">
+      <span class="input-group-text" id="group2"><i class="fa-solid fa-envelope"></i></span>
+      <input type="email" name="email" class="form-control" placeholder="Correo electrónico" required="required">
+    </div>
+
+    <div class="input-group" style="width: 300px; margin-bottom: 32px;">
+      <span class="input-group-text" id="group3"><i class="fa-solid fa-lock"></i></span>
+      <input type="password" name="password" class="form-control" placeholder="Contraseña" required="required">
+    </div>
+
+    <div class="input-group" style="width: 300px; margin-bottom: 32px;">
+      <span class="input-group-text" id="group4"><i class="fa-solid fa-lock"></i></span>
+      <input type="password" name="confirmPassword" class="form-control" placeholder="Confirmar contraseña" required="required">
+    </div>
+
+    <button type="submit" class="btn btn-success">Registrarse</button>
+  </form>
+</div>

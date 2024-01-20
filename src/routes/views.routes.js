@@ -63,9 +63,9 @@ router.get("/users/:page", async (req, res) => {
   });
 });
 
-router.get("/cookies", async (req, res)=>{
-  res.render("cookies", {})
-})
+router.get("/cookies", async (req, res) => {
+  res.render("cookies", {});
+});
 
 router.get("/userspaginated", async (req, res) => {
   const data = await userController.getUsersPaginated();
@@ -78,7 +78,23 @@ router.get("/userspaginated", async (req, res) => {
 });
 
 router.get("/login", async (req, res) => {
-  res.render("login", {})
-})
+  if (req.session.user) {
+    res.redirect("/profile");
+  } else {
+    res.redirect("/login");
+  }
+});
+
+router.get("/register", async (req, res) => {
+  res.render("register", {});
+});
+
+router.get("/profile", async (req, res) => {
+  if (req.session.user) {
+    res.render("profile", { user: req.session.user });
+  } else {
+    res.redirect("/login");
+  }
+});
 
 export default router;
