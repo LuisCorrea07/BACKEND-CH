@@ -1,26 +1,8 @@
-<style>
-  .login-container { max-width: 360px; margin: auto; margin-top: 64px; }
-</style>
-
-{{!-- <h1>Perfil de usuario</h1>
+<h1>Perfil de usuario</h1>
 
 <h2>Usuario: {{user.username}}</h2>
 <h3>Admin: {{user.admin}}</h3>
 
- --}}
-
- <div class="login-container">
-  <h1><b>CODERStore</b></h1>
-  <h2>Perfil de usuario</h2>
-
-  <div class="profile-data">
-    <h3>Datos personales</h3>
-    <p>Nombre: {{ user.firstName }}</p>
-    <p>Apellido: {{ user.lastName }}</p>
-    <p>Edad: {{ user.age }}</p>
-    <p>Email: {{user.email}}</p>
-  </div>
-  
 <form action="/api/sessions/logout" method="get">
     <button type="submit" class="btn btn-success">Salir</button>
 </form>

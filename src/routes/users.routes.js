@@ -1,25 +1,28 @@
-import { Router } from "express";
-import { UserController } from "../controllers/user.controller.mdb.js";
+import { Router } from 'express'
+import { UserController } from '../controllers/user.controller.mdb.js'
 
-const router = Router();
-const controller = new UserController();
+const router = Router()
+const controller = new UserController()
 
-router.get("/", async (req, res) => {
-  try {
-    const users = await controller.getUsers();
-    res.status(200).send({ status: "Todo Ok", data: users });
-  } catch (err) {
-    res.status(500).send({ status: "ERR", data: err.message });
-  }
-});
+router.get('/', async (req, res) => {
+    try {
+        const users = await controller.getUsers()
+        res.status(200).send({ status: 'OK', data: users })
+    } catch (err) {
+        res.status(500).send({ status: 'ERR', data: err.message })
+    }
+})
 
-router.get("/paginated", async (req, res) => {
-  try {
-    const users = await controller.getUsersPaginated();
-    res.status(200).send({ status: "OK", data: users });
-  } catch (error) {
-    res.status(500).send({ status: "ERR", data: error.message });
-  }
-});
+// Podemos modificar el método getUsersPaginated() del controlador
+// para recibir parámetros que obtengamos aquí mediante req.params o req.query
+// http://localhost:3000/api/users/paginated?limit=100&page=2&sort=desc
+router.get('/paginated', async (req, res) => {
+    try {
+        const users = await controller.getUsersPaginated()
+        res.status(200).send({ status: 'OK', data: users })
+    } catch (err) {
+        res.status(500).send({ status: 'ERR', data: err.message })
+    }
+})
 
-export default router;
+export default router

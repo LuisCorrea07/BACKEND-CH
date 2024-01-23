@@ -1,32 +1,39 @@
 <style>
   .login-container { max-width: 360px; margin: auto; margin-top: 64px; }
+
+  input {
+    width: 100%;
+    padding: 12px 16px;
+    margin: 8px 0;
+    display: block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+
+  button {
+    width: 100%;
+    padding: 12px 16px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    background-color: #000;
+    color: #fff;
+    font-size: 16px;
+  }
 </style>
 
 <div class="login-container">
   <h1><b>CODERStore</b></h1>
-  <h2>Registro de usuario</h2>
+  <h2>Registro</h2>
 
-  <form action="/api/sessions/register" method="post" style="margin-top: 32px;">
-    <div class="input-group" style="width: 300px; margin-bottom: 32px;">
-      <span class="input-group-text" id="group1"><i class="fa-solid fa-user"></i></span>
-      <input type="text" name="username" class="form-control" placeholder="Nombre de usuario" required="required">
-    </div>
+  <form action="/api/sessions/register" method="post">
+    <input type="text" placeholder="Nombre" name="firstName" required>
+    <input type="text" placeholder="Apellido" name="lastName" required>
+    <input type="email" placeholder="Correo electrónico" name="email" required>
+    <input type="number" placeholder="Edad" name="age" required>
+    <input type="password" placeholder="Contraseña" name="password" required>
 
-    <div class="input-group" style="width: 300px; margin-bottom: 32px;">
-      <span class="input-group-text" id="group2"><i class="fa-solid fa-envelope"></i></span>
-      <input type="email" name="email" class="form-control" placeholder="Correo electrónico" required="required">
-    </div>
-
-    <div class="input-group" style="width: 300px; margin-bottom: 32px;">
-      <span class="input-group-text" id="group3"><i class="fa-solid fa-lock"></i></span>
-      <input type="password" name="password" class="form-control" placeholder="Contraseña" required="required">
-    </div>
-
-    <div class="input-group" style="width: 300px; margin-bottom: 32px;">
-      <span class="input-group-text" id="group4"><i class="fa-solid fa-lock"></i></span>
-      <input type="password" name="confirmPassword" class="form-control" placeholder="Confirmar contraseña" required="required">
-    </div>
-
-    <button type="submit" class="btn btn-success">Registrarse</button>
+    <button type="submit">Registrar</button>
   </form>
 </div>

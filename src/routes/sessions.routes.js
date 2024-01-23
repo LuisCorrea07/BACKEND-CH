@@ -86,63 +86,37 @@ router.post("/login", async (req, res) => {
 
 router.post("/register", async (req, res) => {
     
-  const { username, email, password, confirmPassword, firstName, lastName, age } = req.body;
+  // Obtener los datos del formulario
+  const firstName = req.body.firstName;
+  const lastName = req.body.lastName;
+  const email = req.body.email;
+  const age = req.body.age;
+  const password = req.body.password;
 
-  // Validar los datos del formulario
-
-  if (username.length < 6) {
-    return res.status(400).send({
-      status: "ERR",
-      data: "El nombre de usuario debe tener al menos 6 caracteres",
-    });
+  // Validar los datos
+  if (!firstName.trim()) {
+    return res.status(422).send({ error: "El nombre es obligatorio." });
   }
 
-  if (!email.match(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/)) {
-    return res.status(400).send({
-      status: "ERR",
-      data: "El correo electrónico no es válido",
-    });
+  if (!lastName.trim()) {
+    return res.status(422).send({ error: "El apellido es obligatorio." });
+  }
+
+  if (!email.match(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)) {
+    return res.status(422).send({ error: "La dirección de correo electrónico no es válida." });
+  }
+
+  if (!Number.isInteger(age)) {
+    return res.status(422).send({ error: "La edad debe ser un número entero." });
   }
 
   if (password.length < 8) {
-    return res.status(400).send({
-      status: "ERR",
-      data: "La contraseña debe tener al menos 8 caracteres",
-    });
+    return res.status(422).send({ error: "La contraseña debe tener al menos 8 caracteres." });
   }
 
-  if (password !== confirmPassword) {
-    return res.status(400).send({
-      status: "ERR",
-      data: "Las contraseñas no coinciden",
-    });
-  }
-
-  // Crear un nuevo usuario en la base de datos
-
-  const user = new User({
-    username,
-    email,
-    password,
-    firstName,
-    lastName,
-    age,
-  });
-
-  await user.save();
-
-  // Iniciar sesión al usuario
-
-  req.session.user = user;
-
-  // Devolver una respuesta exitosa
-
-  return res.status(200).send({
-    status: "OK",
-    data: "Registro exitoso",
-  });
+  // Los datos son válidos
+  return true;
 });
-
 
 
 

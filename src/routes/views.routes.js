@@ -1,6 +1,11 @@
 import { Router } from "express";
+import { ProductController } from "../controllers/product.controller.mdb.js";
+import { UserController } from "../controllers/user.controller.mdb.js";
 
 const router = Router();
+
+const controller = new ProductController();
+const userController = new UserController();
 
 const users = [
   {
@@ -37,19 +42,36 @@ router.get("/chat", (req, res) => {
   });
 });
 
-router.get("/products", (req, res) => {
-  res.render("products", {});
+router.get("/products", async (req, res) => {
+  if (req.session.user) {
+    const products = await controller.getProducts();
+    res.render("products", {
+      title: "Listado de Productos",
+      products: products,
+    });
+  } else {
+    res.redirect("/login");
+  }
 });
 
 router.get("/users", async (req, res) => {
-  const data = await userController.getUsersPaginated();
-  data.pages = [];
-  for (let i = 1; i <= data.totalPages; i++) data.pages.push(i);
+  if (req.session.user && req.session.admin === true) {
+    const data = await userController.getUsersPaginated(
+      req.query.page || 1,
+      req.query.limit || 50
+    );
+    data.pages = [];
+    for (let i = 1; i <= data.totalPages; i++) data.pages.push(i);
 
-  res.render("users", {
-    title: "Listado de Usuarios",
-    data: data,
-  });
+    res.render("users", {
+      title: "Listado de Usuarios",
+      data: data,
+    });
+  } else if (req.session.user) {
+    res.redirect("/profile");
+  } else {
+    res.redirect("/login");
+  }
 });
 
 router.get("/users/:page", async (req, res) => {
@@ -62,11 +84,6 @@ router.get("/users/:page", async (req, res) => {
     data: data,
   });
 });
-
-router.get("/cookies", async (req, res) => {
-  res.render("cookies", {});
-});
-
 router.get("/userspaginated", async (req, res) => {
   const data = await userController.getUsersPaginated();
   data.pages = [];
@@ -77,10 +94,24 @@ router.get("/userspaginated", async (req, res) => {
   });
 });
 
+router.get("/cookies", async (req, res) => {
+  res.render("cookies", {});
+});
+
 router.get("/login", async (req, res) => {
   if (req.session.user) {
     res.redirect("/profile");
   } else {
+    res.render("login", {});
+  }
+});
+
+router.get("/profile", async (req, res) => {
+  // Si el usuario tiene sesión activa, mostramos su perfil
+  if (req.session.user) {
+    res.render("profile", { user: req.session.user });
+  } else {
+    // sino volvemos al login
     res.redirect("/login");
   }
 });
@@ -88,13 +119,4 @@ router.get("/login", async (req, res) => {
 router.get("/register", async (req, res) => {
   res.render("register", {});
 });
-
-router.get("/profile", async (req, res) => {
-  if (req.session.user) {
-    res.render("profile", { user: req.session.user });
-  } else {
-    res.redirect("/login");
-  }
-});
-
 export default router;
