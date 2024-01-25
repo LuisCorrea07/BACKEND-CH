@@ -11,6 +11,7 @@ const schema = new mongoose.Schema({
   lastName: { type: String, required: true, index: true },
   email: { type: String, required: true },
   gender: { type: String, required: true },
+  password: { type: String, required: true },
 });
 
 schema.plugin(mongoosePaginate);
