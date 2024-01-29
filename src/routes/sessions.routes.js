@@ -89,6 +89,14 @@ router.get('/failrestore', async (req, res) => {
   res.status(400).send({ status: 'ERR', data: 'El email no existe o faltan datos obligatorios' })
 })
 
+router.get('/github', passport.authenticate('githubAuth', { scope: ['user:email'] }), async (req, res) => {
+})
+
+router.get('/githubcallback', passport.authenticate('githubAuth', { failureRedirect: '/login' }), async (req, res) => {
+    req.session.user = { username: req.user.email, admin: true }
+    // req.session.user = req.user
+    res.redirect('/profile')
+})
 
 router.post("/login", async (req, res) => {
   try {
@@ -98,6 +106,11 @@ router.post("/login", async (req, res) => {
       req.session.user = { username: email, admin: true };
       //res.status(200).send({ status: "OK", data: "Sesión iniciada" });
       res.redirect("/profile");
+
+      // Utilizando tokens JWT
+      //const access_token = generateToken({ username: email, admin: true }, '1h')
+      // res.status(200).send({ status: 'OK', data: access_token })
+      //res.redirect(`/profilejwt?access_token=${access_token}`)
     } else {
       res.status(401).send({ status: "ERR", data: "Datos no válidos" });
     }
@@ -107,44 +120,13 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.post("/register",passport.authenticate('registerAuth', { failureRedirect: '/api/sessions/failregister' }), async (req, res) => {
-  // Obtener los datos del formulario
-  const firstName = req.body.firstName;
-  const lastName = req.body.lastName;
-  const email = req.body.email;
-  const age = req.body.age;
-  const password = req.body.password;
-
-  // Validar los datos
-  if (!firstName.trim()) {
-    return res.status(422).send({ error: "El nombre es obligatorio." });
+router.post('/register', passport.authenticate('registerAuth', { failureRedirect: '/api/sessions/failregister' }), async (req, res) => {
+  try {
+      res.status(200).send({ status: 'OK', data: 'Usuario registrado' })
+  } catch (err) {
+      res.status(500).send({ status: 'ERR', data: err.message })
   }
-
-  if (!lastName.trim()) {
-    return res.status(422).send({ error: "El apellido es obligatorio." });
-  }
-
-  if (!email.match(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)) {
-    return res
-      .status(422)
-      .send({ error: "La dirección de correo electrónico no es válida." });
-  }
-
-  if (!Number.isInteger(age)) {
-    return res
-      .status(422)
-      .send({ error: "La edad debe ser un número entero." });
-  }
-
-  if (password.length < 8) {
-    return res
-      .status(422)
-      .send({ error: "La contraseña debe tener al menos 8 caracteres." });
-  }
-
-  // Los datos son válidos
-  return true;
-});
+})
 
 
 router.post('/restore', passport.authenticate('restoreAuth', { failureRedirect: '/api/sessions/failrestore' }), async (req, res) => {

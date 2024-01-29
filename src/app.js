@@ -7,6 +7,7 @@ import mongoose from "mongoose";
 import session from "express-session";
 import FileStore from "session-file-store";
 import MongoStore from "connect-mongo";
+import passport from "passport";
 
 //rutas propias
 import productsRouter from "./routes/products.routes.js";
@@ -48,6 +49,10 @@ app.use(
     saveUninitialized: false,
   })
 );
+
+app.use(passport.initialize())
+app.use(passport.session())
+
 app.use("/", viewsRouter);
 app.use("/api/products", productsRouter);
 app.use("/api/users", usersRouter);
