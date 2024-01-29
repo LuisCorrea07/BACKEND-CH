@@ -7,10 +7,10 @@ import { createHash, isValidPassword } from "../utils.js"
 const initPassport = () =>{
     const verifyRegistration = async(req, username, password, done) => {
         try {
-            const {firsName, lastName, email, gender} = req.body
+            const {firstName, lastName, email, gender} = req.body
 
             if (!firstName || !lastName || !email || !gender) {
-                return done("Se requiere firsName, lastName, email, gender", false)
+                return done("Se requiere firstName, lastName, email, gender", false)
             }
             const user = await userModel.findOne({email : username})
 
