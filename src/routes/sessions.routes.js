@@ -2,9 +2,9 @@ import { Router } from "express";
 import passport from 'passport'
 import userModel from "../models/users.model.js";
 import { createHash, isValidPassword } from "../utils.js";
-import initPassport from '../config/passport.config.js'
+import initPassport from '../config/passport.config.js';
 
-
+initPassport() //inicializamos estrategias
 
 const router = Router();
 
@@ -82,11 +82,11 @@ router.get("/hash/:pass", async (req,res) => {
 })
 
 router.get('/failregister', async (req, res) => {
-  res.status(400).send({ status: 'ERR', data: 'El email ya existe o faltan datos obligatorios' })
+  res.status(400).send({ status: 'ERR', data: 'El usuario ya existe o faltan datos obligatorios' })
 })
 
 router.get('/failrestore', async (req, res) => {
-  res.status(400).send({ status: 'ERR', data: 'El email no existe o faltan datos obligatorios' })
+  res.status(400).send({ status: 'ERR', data: 'El usuario no existe o faltan datos obligatorios' })
 })
 
 router.get('/github', passport.authenticate('githubAuth', { scope: ['user:email'] }), async (req, res) => {
@@ -120,7 +120,7 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.post('/register', passport.authenticate('registerAuth', { failureRedirect: '/api/sessions/failregister' }), async (req, res) => {
+router.post('/register', passport.authenticate('register', { failureRedirect: '/api/sessions/failregister' }), async (req, res) => {
   try {
       res.status(200).send({ status: 'OK', data: 'Usuario registrado' })
   } catch (err) {
@@ -129,7 +129,7 @@ router.post('/register', passport.authenticate('registerAuth', { failureRedirect
 })
 
 
-router.post('/restore', passport.authenticate('restoreAuth', { failureRedirect: '/api/sessions/failrestore' }), async (req, res) => {
+router.post('/restore', passport.authenticate('restore', { failureRedirect: '/api/sessions/failrestore' }), async (req, res) => {
   try {
       res.status(200).send({ status: 'OK', data: 'Clave actualizada' })
   } catch (err) {
