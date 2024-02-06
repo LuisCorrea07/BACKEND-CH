@@ -89,8 +89,9 @@ router.get('/failrestore', async (req, res) => {
   res.status(400).send({ status: 'ERR', data: 'El usuario no existe o faltan datos obligatorios' })
 })
 
+
 router.get('/github', passport.authenticate('githubAuth', { scope: ['user:email'] }), async (req, res) => {
-})
+});
 
 router.get('/githubcallback', passport.authenticate('githubAuth', { failureRedirect: '/login' }), async (req, res) => {
     req.session.user = { username: req.user.email, admin: true }

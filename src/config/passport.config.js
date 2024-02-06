@@ -1,7 +1,7 @@
 import passport from "passport";
 import LocalStrategy from "passport-local";
 import GithubStrategy from "passport-github2";
-import userModel from "../models/user.model.js";
+import userModel from "../models/users.model.js";
 import { createHash, isValidPassword } from "../utils.js";
 
 const initPassport = () => {
@@ -71,23 +71,34 @@ const initPassport = () => {
       if (!user) {
         const name_parts = profile._json.name.split(" ");
         const newUser = {
-          first_name: name_parts[0],
-          last_name: name_parts[1],
+          firstName: name_parts[0],
+          lastName: name_parts[1],
           email: profile._json.email,
           gender: "NA",
           password: " ",
         };
-
         const process = await userModel.create(newUser);
-
         return done(null, process);
       } else {
         done(null, user);
       }
-    } catch (err) {
-      return done(`Error passport Github: ${err.message}`);
+    } catch (error) {
+      return done(`Error passport Github: ${error.message}`);
     }
   };
+
+  //Estrategia para autenticarse con GitHub
+  passport.use(
+    "githubAuth",
+    new GithubStrategy(
+      {
+        clientID: "Iv1.546d41346e8f4cba",
+        clienteSecret: "79b8504dbdcb20700350c1307d928760df9169a1",
+        callbackURL: "http://localhost:3000/api/sessions/githubcallback",
+      },
+      verifyGithub
+    )
+  );
 
   // Creamos estrategia local de autenticación para registro
   passport.use(
@@ -116,17 +127,6 @@ const initPassport = () => {
   );
 
   // Creamos estrategia para autenticación externa con Github
-  passport.use(
-    "githubAuth",
-    new GithubStrategy(
-      {
-        clientID: "Iv1.0c3c12fcc83c9770",
-        clientSecret: "ea4f406cbd6be3c160113f683ab29059a0a21072",
-        callbackURL: "http://localhost:5000/api/sessions/githubcallback",
-      },
-      verifyGithub
-    )
-  );
 
   // Métodos "helpers" de passport para manejo de datos de sesión
   // Son de uso interno de passport, normalmente no tendremos necesidad de tocarlos.
